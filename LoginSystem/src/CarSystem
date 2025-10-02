@@ -1,0 +1,157 @@
+import java.util.ArrayList;
+import java.util.List;
+
+// ------------------ Car Class ------------------
+class Car {
+    private int carId;
+    private String brand;
+    private String model;
+    private boolean available;
+
+    // Constructor
+    public Car(int carId, String brand, String model) {
+        this.carId = carId;
+        this.brand = brand;
+        this.model = model;
+        this.available = true; // by default car is available
+    }
+
+    // Getter methods
+    public int getCarId() {
+        return carId;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    // Rent the car
+    public void rentCar() {
+        if (available) {
+            available = false;
+            System.out.println("✅ Car " + brand + " " + model + " rented successfully.");
+        } else {
+            System.out.println("❌ Car " + brand + " " + model + " is already rented.");
+        }
+    }
+
+    // Return the car
+    public void returnCar() {
+        available = true;
+        System.out.println("🚗 Car " + brand + " " + model + " returned successfully.");
+    }
+
+    @Override
+    public String toString() {
+        return "CarID: " + carId + ", " + brand + " " + model + 
+               " (Available: " + available + ")";
+    }
+}
+
+// ------------------ Customer Class ------------------
+class Customer {
+    private int customerId;
+    private String name;
+
+    public Customer(int customerId, String name) {
+        this.customerId = customerId;
+        this.name = name;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerID: " + customerId + ", Name: " + name;
+    }
+}
+
+// ------------------ Rental Agency Class ------------------
+class RentalAgency {
+    private List<Car> cars = new ArrayList<>();
+    private List<Customer> customers = new ArrayList<>();
+
+    // Add car
+    public void addCar(Car car) {
+        cars.add(car);
+    }
+
+    // Add customer
+    public void addCustomer(Customer customer) {
+        customers.add(customer);
+    }
+
+    // Show available cars
+    public void showAvailableCars() {
+        System.out.println("\n--- Available Cars ---");
+        for (Car car : cars) {
+            if (car.isAvailable()) {
+                System.out.println(car);
+            }
+        }
+    }
+
+    // Rent a car
+    public void rentCar(int carId, int customerId) {
+        Car carToRent = null;
+        for (Car car : cars) {
+            if (car.getCarId() == carId) {
+                carToRent = car;
+                break;
+            }
+        }
+
+        if (carToRent != null && carToRent.isAvailable()) {
+            carToRent.rentCar();
+            System.out.println("👤 Customer " + customerId + " rented Car " + carId);
+        } else {
+            System.out.println("❌ Car not available for rent.");
+        }
+    }
+
+    // Return a car
+    public void returnCar(int carId) {
+        for (Car car : cars) {
+            if (car.getCarId() == carId) {
+                car.returnCar();
+                return;
+            }
+        }
+        System.out.println("❌ Car with ID " + carId + " not found.");
+    }
+}
+
+// ------------------ Main Program ------------------
+public class CarRentalSystem {
+    public static void main(String[] args) {
+        // Create rental agency
+        RentalAgency agency = new RentalAgency();
+
+        // Add cars
+        agency.addCar(new Car(1, "Toyota", "Corolla"));
+        agency.addCar(new Car(2, "Honda", "Civic"));
+        agency.addCar(new Car(3, "Ford", "Mustang"));
+
+        // Add customers
+        agency.addCustomer(new Customer(101, "Alice"));
+        agency.addCustomer(new Customer(102, "Bob"));
+
+        // Show available cars
+        agency.showAvailableCars();
+
+        // Rent a car
+        agency.rentCar(2, 101);
+
+        // Show available cars again
+        agency.showAvailableCars();
+
+        // Return the car
+        agency.returnCar(2);
+
+        // Show available cars again
+        agency.showAvailableCars();
+    }
+}
+
